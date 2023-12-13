@@ -4,8 +4,54 @@ import './App.css';
 function App() {
   const [squares, setSquares] = useState(Array(9).fill(null));
   const [xIsNext, setXIsNext] = useState(true);
+
+  const handleClick = (i) => {
+    const newSquares = squares.slice();
+    if (calculateWinner(squares) || squares[i]) {
+      return;
+    }
+    newSquares[i] = xIsNext ? 'X' : 'O';
+    setSquares(newSquares);
+    setXIsNext(!xIsNext);
+  };
+
+  const renderSquare = (i) => {
+    return <button className="square" onClick={() => handleClick(i)}>
+      {squares[i]}
+    </button>;
+  };
+
+  const winner = calculateWinner(squares);
+  let status;
+  if (winner) {
+    status = 'Winner: ' + winner;
+  } else if (squares.every(Boolean)) {
+    status = 'Tie';
+  } else {
+    status = 'Next player: ' + (xIsNext ? 'X' : 'O');
+  }
+
   return (
     <div className="game">
+      <div className="status">{status}</div>
+      <div className="board-row">
+        {renderSquare(0)}
+        {renderSquare(1)}
+        {renderSquare(2)}
+      </div>
+      <div className="board-row">
+        {renderSquare(3)}
+        {renderSquare(4)}
+        {renderSquare(5)}
+      </div>
+      <div className="board-row">
+        {renderSquare(6)}
+        {renderSquare(7)}
+        {renderSquare(8)}
+      </div>
+      <button className="reset" onClick={() => setSquares(Array(9).fill(null))}>
+        Reset
+      </button>
     </div>
   );
 }
